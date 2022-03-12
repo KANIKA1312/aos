@@ -14,14 +14,18 @@ web_title = '\xa0Advantage Shopping'
 password = fake.password()
 first_name = fake.first_name()
 last_name = fake.last_name()
-username = f'{first_name}13a12'
+fullname = first_name + ' ' + last_name
+username = f'{first_name}o82'
 email = f'{username}@{fake.free_email_domain()}'
 phone_number = fake.phone_number()[:15]
 country = fake.current_country()
 city = fake.city()
 address = fake.street_address()
 postal_code = fake.postalcode()
+rand_province = ''
 contact_sub = 'Hi, When you guyz gonna introduce Boat Headphones?'
+creditcard = fake.credit_card_number()[:12]
+cvv = 'Ss' + fake.credit_card_security_code()
 
 # --------------------------- DATA--------------------
 

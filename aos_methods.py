@@ -27,6 +27,8 @@ def setUp():
 
 
 def create_new_user():
+    print('-----------------------------Create New User----------------------------------')
+    sleep(4)
     driver.find_element(By.ID, 'menuUser').click()
     sleep(3)
     driver.find_element(By.LINK_TEXT, 'CREATE NEW ACCOUNT').click()
@@ -54,15 +56,15 @@ def create_new_user():
     if locators.country == 'Canada':
         pr_list = ['BC', 'AB', 'SK', 'MB', 'ON', 'QC', 'NB', 'PB', 'NL', 'NS']
         for li in pr_list:
-            rand_pr = random.choice(pr_list)
-            driver.find_element(By.NAME, 'state_/_province_/_regionRegisterPage').send_keys(rand_pr)
+            locators.rand_province = random.choice(pr_list)
+            driver.find_element(By.NAME, 'state_/_province_/_regionRegisterPage').send_keys(locators.rand_province)
             break
     sleep(0.25)
     if locators.country == 'United States':
         pr_list = ['AK', 'AL', 'AZ', 'AR', 'DC', 'DE', 'FL', 'ID', 'IL', 'IN']
         for li in pr_list:
-            rand_pr = random.choice(pr_list)
-            driver.find_element(By.NAME, 'state_/_province_/_regionRegisterPage').send_keys(rand_pr)
+            locators.rand_province = random.choice(pr_list)
+            driver.find_element(By.NAME, 'state_/_province_/_regionRegisterPage').send_keys(locators.rand_province)
             break
     driver.find_element(By.NAME, 'postal_codeRegisterPage').send_keys(locators.postal_code)
     sleep(0.25)
@@ -77,6 +79,7 @@ def create_new_user():
 
 
 def log_in(username, password):
+    print('-----------------------------Log In----------------------------------')
     driver.find_element(By.ID, 'menuUser').click()
     sleep(2)
     driver.find_element(By.NAME, 'username').send_keys(username)
@@ -90,6 +93,7 @@ def log_in(username, password):
 
 
 def log_out():
+    print('-----------------------------Log Out----------------------------------')
     assert driver.find_element(By.ID, 'menuUserLink').is_displayed()
     sleep(0.25)
     driver.find_element(By.ID, 'hrefUserIcon').click()
@@ -102,7 +106,7 @@ def log_out():
 
 def validate_homepage_texts_links():
     # all text check
-
+    print('-----------------------------Validate Home Page texts & Links----------------------------------')
     assert driver.find_element(By.ID, 'speakersTxt').is_displayed()
     assert driver.find_element(By.ID, 'tabletsTxt').is_displayed()
     assert driver.find_element(By.ID, 'laptopsTxt').is_displayed()
@@ -205,7 +209,7 @@ def validate_homepage_texts_links():
         if handle != main_page:
             fb_page = handle
             driver.switch_to.window(fb_page)
-            # change the control to chat page
+            # change the control to fb page
             if driver.current_url != locators.fb_link:
                 print('ALERT!! Broken Facebook Link')
             sleep(2)
@@ -220,7 +224,7 @@ def validate_homepage_texts_links():
         if handle != main_page:
             tw_page = handle
             driver.switch_to.window(tw_page)
-            # change the control to chat page
+            # change the control to twitter page
             if driver.current_url != locators.twitter_link:
                 print('ALERT!! Broken Twitter Link')
             sleep(2)
@@ -235,9 +239,9 @@ def validate_homepage_texts_links():
         if handle != main_page:
             li_page = handle
             driver.switch_to.window(li_page)
-            # change the control to chat page
+            # change the control to LinkedIn page
             if driver.current_url != locators.linkedin_link:
-                print('ALERT!! Broken Linkedin Link')
+                print('ALERT!! Broken LinkedIn Link')
 
             sleep(3)
     driver.close()
@@ -307,6 +311,93 @@ def contact_us_form():
     sleep(1)
     print('')
     print('CONTACT US Form working!')
+    print('')
+
+
+def checkout_shopping_cart():
+    print('-----------------------------Check Out Shopping Cart----------------------------------')
+    sleep(2)
+    driver.find_element(By.ID, 'headphonesTxt').click()
+    sleep(1)
+    assert driver.current_url == locators.headphone_url
+    sleep(1)
+    product_name = driver.find_element(By.XPATH, './/a[@class="productName ng-binding"]').text
+    sleep(1)
+    driver.find_element(By.XPATH, './/a[@class="productName ng-binding"]').click()
+    sleep(1)
+    driver.find_element(By.XPATH, '//button[contains(.,"ADD TO CART")]').click()
+    sleep(1)
+    driver.find_element(By.ID, 'checkOutPopUp').click()
+    # fetching data values
+    total_value = driver.find_element(By.XPATH, './/span[@class="roboto-medium totalValue ng-binding"]').text
+    name = driver.find_element(By.XPATH, '//div/label[@class="ng-binding"]').text
+    address = driver.find_element(By.XPATH, '//*[@id="userDetails"]/div[1]/label[1]').text
+    city = driver.find_element(By.XPATH, '//*[@id="userDetails"]/div[2]/label[2]').text
+    country = driver.find_element(By.XPATH, '//*[@id="userDetails"]/div[2]/label[3]').text
+    state = driver.find_element(By.XPATH, '//*[@id="userDetails"]/div[2]/label[4]').text
+    postal = driver.find_element(By.XPATH, '//*[@id="userDetails"]/div[2]/label[5]').text
+    phone = driver.find_element(By.XPATH, '//*[@id="userDetails"]/div[3]/label').text
+    sleep(1)
+    driver.find_element(By.ID, 'next_btn').click()
+
+    # ---------------------Master Card Payment-----------------------------------------
+    # browser.find_element_by_xpath(".//input[@type='radio' and @value='SRF']").click()
+    # driver.find_element(By.CSS_SELECTOR,'input[type="radio"][name="masterCredit"]').click()
+    # driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="save_master_credit"]').click()
+    # driver.find_element(By.ID,'creditCard').send_keys(locators.creditcard)
+    # driver.find_element(By.XPATH, '//input[@name = "cvv_number"]').send_keys(locators.cvv)
+    # driver.find_element(By.XPATH,'//input[@name = "cardholder_name"]').send_keys(locators.fullname)
+    # sleep(1)
+    # driver.find_element(By.XPATH,'//button[@id = "pay_now_btn_ManualPayment"]').click()
+    # ---------------------Master Card Payment-----------------------------------------
+
+    # ---------------------Safe Pay Payment-----------------------------------------
+
+    driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="save_safepay"]').click()
+    driver.find_element(By.XPATH, '//input[@name = "safepay_username"]').send_keys(locators.creditcard)
+    driver.find_element(By.XPATH, '//input[@name = "safepay_password"]').send_keys(locators.cvv)
+    sleep(1)
+    driver.find_element(By.XPATH, '//button[@id = "pay_now_btn_SAFEPAY"]').click()
+    sleep(3)
+    assert driver.find_element(By.XPATH, './/span[@class="roboto-regular ng-scope"]').is_displayed()
+    track_num = driver.find_element(By.ID, 'trackingNumberLabel').text
+    order_num = driver.find_element(By.ID, 'orderNumberLabel').text
+
+    # assert data values
+
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{name}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{address}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{city}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{country}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{state}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{postal}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{phone}")]').is_displayed()
+    # assert driver.find_element(By.XPATH,f'//div[contains(.,"{datetime.datetime.now().strftime
+    # ("%d/%-m/%Y")}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{total_value}")]').is_displayed()
+    driver.find_element(By.ID, 'hrefUserIcon').click()
+    sleep(0.25)
+    driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My orders")]').click()
+    sleep(1)
+    assert driver.find_element(By.XPATH, f'//tr[contains(.,"{order_num}")]').is_displayed()
+    assert driver.find_element(By.XPATH, f'//tr[contains(.,"{product_name}")]').is_displayed()
+
+    print(f'Order placed for {name}.The delivery address is {address}, {city} {state}, {country} , {postal}. '
+          f'Customer can be reach at {phone}.')
+    print('')
+    print(f'Customer order : {product_name} & total cost is {total_value}.')
+    print('')
+    print(f'The order number is {order_num} & tracking number is {track_num}.')
+    print('')
+    driver.find_element(By.LINK_TEXT, 'REMOVE').click()
+    sleep(1)
+    driver.find_element(By.XPATH, '//button[contains(.,"YES")]').click()
+    sleep(1)
+    print(f'Order Cancel for {name}, PRODUCT : {product_name}. CUSTOMER CANCELLED THE ORDER!!!. ')
+    assert driver.find_element(By.XPATH, '//div//label[contains(., " - No orders - ")]').is_displayed()
+    assert driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').is_enabled()
+    driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').click()
+    sleep(1)
     print('')
 
 
