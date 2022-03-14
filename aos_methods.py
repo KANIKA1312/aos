@@ -87,7 +87,7 @@ def log_in(username, password):
     driver.find_element(By.NAME, 'password').send_keys(password)
     sleep(0.25)
     driver.find_element(By.ID, 'sign_in_btnundefined').click()
-    print(f'{locators.first_name} {locators.last_name}. Logged in '
+    print(f'{locators.first_name} {locators.last_name}, Logged in '
           f'as {locators.username} ')
     print('')
 
@@ -398,6 +398,94 @@ def checkout_shopping_cart():
     assert driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').is_enabled()
     driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').click()
     sleep(1)
+    print('')
+
+def edit_user():
+    print('--------------------------Edit User---------------------------------')
+    sleep(2)
+    driver.find_element(By.ID, 'hrefUserIcon').click()
+    sleep(1)
+    driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My account")]').click()
+    sleep(0.25)
+    name = driver.find_element(By.XPATH, '//div/label[@class="ng-binding"]').text
+    sleep(0.25)
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{name}")]').is_displayed
+    sleep(0.25)
+    driver.find_element(By.XPATH,'//h3/a[contains(.,"Edit")]').click()
+    sleep(3)
+    #-------------------Change Deatils for Email & Password-------------
+    # driver.find_element(By.NAME,'emailAccountDetails').clear()
+    # driver.find_element(By.NAME,'emailAccountDetails').send_keys('newuser@gmail.com')
+    # driver.find_element(By.LINK_TEXT,'Change password').click()
+    # driver.find_element(By.NAME,'old_passwordAccountDetails').click()
+    # driver.find_element(By.NAME,'old_passwordAccountDetails').send_keys(locators.password)
+    # driver.find_element(By.NAME,'new_passwordAccountDetails').click()
+    # driver.find_element(By.NAME,'new_passwordAccountDetails').send_keys('Kk12345')
+    # driver.find_element(By.NAME,'confirm_new_passwordAccountDetails').click()
+    # driver.find_element(By.NAME,'confirm_new_passwordAccountDetails').send_keys('Kk12345')
+    #----------------------------------------------------------------------------------------
+    driver.find_element(By.NAME,'first_nameAccountDetails').click()
+    sleep(1)
+    driver.find_element(By.NAME, 'first_nameAccountDetails').clear()
+    sleep(1)
+    driver.find_element(By.NAME,'first_nameAccountDetails').send_keys('Anna')
+    sleep(2)
+    new_name = driver.find_element(By.NAME,'first_nameAccountDetails').text
+    sleep(2)
+    driver.find_element(By.ID,'save_btnundefined').click()
+    sleep(2)
+    assert driver.current_url == locators.my_account_url
+    print('Edit Successful!!!.')
+    print('')
+
+
+def delete_user():
+    print('--------------------------Delete the User----------------------------')
+    sleep(1)
+    driver.find_element(By.ID, 'hrefUserIcon').click()
+    sleep(1)
+    driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My orders")]').click()
+    sleep(1)
+    assert driver.find_element(By.XPATH, '//div//label[contains(., " - No orders - ")]').is_displayed()
+    assert driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').is_enabled()
+    sleep(1)
+    driver.find_element(By.ID, 'hrefUserIcon').click()
+    sleep(1)
+    driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My account")]').click()
+    new_name = driver.find_element(By.XPATH, '//div/label[@class="ng-binding"]').text
+    sleep(0.25)
+    assert driver.find_element(By.XPATH, f'//div[contains(.,"{new_name}")]').is_displayed()
+    print(f'Name changed from {locators.first_name} {locators.last_name} to {new_name}.')
+    sleep(0.25)
+    driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="category_laptops"]').click()
+    sleep(1)
+    driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="category_mice"]').click()
+    sleep(1)
+    driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+    sleep(1)
+    driver.find_element(By.XPATH,'//button/div[contains(.,"Delete Account")]').click()
+    sleep(2)
+    driver.find_element(By.XPATH,'//div/div[contains(.,"yes")]').click()
+    sleep(3)
+    logger('Deleted')
+    driver.find_element(By.ID, 'hrefUserIcon').click()
+    sleep(3)
+    driver.find_element(By.NAME,'username').click()
+    sleep(0.25)
+    driver.find_element(By.NAME,'username').send_keys(locators.username)
+    sleep(0.25)
+    driver.find_element(By.NAME,'password').click()
+    sleep(0.25)
+    driver.find_element(By.NAME,'password').send_keys(locators.password)
+    sleep(0.25)
+    driver.find_element(By.ID,'sign_in_btnundefined').click()
+    sleep(0.25)
+    assert driver.current_url == locators.web_url
+    sleep(0.25)
+    assert driver.find_element(By.ID,'signInResultMessage').is_displayed()
+    sleep(1)
+    driver.find_element(By.XPATH, '//div[@class = "closeBtn loginPopUpCloseBtn"]').click()
+    print('User Deleted Successfully')
     print('')
 
 

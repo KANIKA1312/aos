@@ -8,6 +8,8 @@ fake = Faker(locale_list)
 app = 'Advantage Online Shopping'
 web_url = 'https://advantageonlineshopping.com/#/'
 web_title = '\xa0Advantage Shopping'
+my_account_url = 'https://advantageonlineshopping.com/#/myAccount'
+
 
 # Create New User Data
 
@@ -15,7 +17,7 @@ password = fake.password()
 first_name = fake.first_name()
 last_name = fake.last_name()
 fullname = first_name + ' ' + last_name
-username = f'{first_name}o82'
+username = f'{first_name}au2'
 email = f'{username}@{fake.free_email_domain()}'
 phone_number = fake.phone_number()[:15]
 country = fake.current_country()
