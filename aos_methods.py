@@ -18,6 +18,7 @@ def setUp():
     print('-----------------~~~~~~-------------------')
     driver.maximize_window()
     driver.implicitly_wait(30)
+    # to website home page
     driver.get(locators.web_url)
     assert driver.current_url == locators.web_url
     assert driver.title == locators.web_title
@@ -29,10 +30,13 @@ def setUp():
 def create_new_user():
     print('-----------------------------Create New User----------------------------------')
     sleep(4)
+    # click on user icon
     driver.find_element(By.ID, 'menuUser').click()
     sleep(3)
+    # click on create account button
     driver.find_element(By.LINK_TEXT, 'CREATE NEW ACCOUNT').click()
     sleep(1)
+    # Enter details
     driver.find_element(By.NAME, 'usernameRegisterPage').send_keys(locators.username)
     sleep(0.25)
     driver.find_element(By.NAME, 'emailRegisterPage').send_keys(locators.email)
@@ -53,6 +57,7 @@ def create_new_user():
     sleep(0.25)
     driver.find_element(By.NAME, 'addressRegisterPage').send_keys(locators.address)
     sleep(0.25)
+    # Random province selection from faker locale
     if locators.country == 'Canada':
         pr_list = ['BC', 'AB', 'SK', 'MB', 'ON', 'QC', 'NB', 'PB', 'NL', 'NS']
         for li in pr_list:
@@ -68,24 +73,30 @@ def create_new_user():
             break
     driver.find_element(By.NAME, 'postal_codeRegisterPage').send_keys(locators.postal_code)
     sleep(0.25)
+    # click on i agree checkbox
     driver.find_element(By.NAME, 'i_agree').click()
     sleep(0.25)
+    # click register button
     driver.find_element(By.ID, 'register_btnundefined').click()
     sleep(0.25)
     print(f'New account now exist for {locators.first_name} {locators.last_name}. '
           f'Username is {locators.username} & associated Email ID for account is {locators.email}')
     print('')
-    logger('created')
+    logger('created')  # call logger
 
 
 def log_in(username, password):
     print('-----------------------------Log In----------------------------------')
+    # click on user icon
     driver.find_element(By.ID, 'menuUser').click()
     sleep(2)
+    # Enter username
     driver.find_element(By.NAME, 'username').send_keys(username)
     sleep(0.25)
+    # Enter Password
     driver.find_element(By.NAME, 'password').send_keys(password)
     sleep(0.25)
+    # click on sign in
     driver.find_element(By.ID, 'sign_in_btnundefined').click()
     print(f'{locators.first_name} {locators.last_name}, Logged in '
           f'as {locators.username} ')
@@ -96,8 +107,10 @@ def log_out():
     print('-----------------------------Log Out----------------------------------')
     assert driver.find_element(By.ID, 'menuUserLink').is_displayed()
     sleep(0.25)
+    # click on user icon
     driver.find_element(By.ID, 'hrefUserIcon').click()
     sleep(0.25)
+    # select logout from dropdown
     driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"Sign out")]').click()
     print('Logout Successful!!!')
     print('')
@@ -197,7 +210,7 @@ def validate_homepage_texts_links():
             if driver.find_element(By.ID, 'btnSender').is_enabled():
                 driver.find_element(By.ID, 'btnSender').click()
             else:
-                print(('Alert!! Chatbox is not working'))
+                print('Alert!! Chatbox is not working')
     sleep(6)
     driver.close()
     driver.switch_to.window(main_page)
@@ -317,16 +330,20 @@ def contact_us_form():
 def checkout_shopping_cart():
     print('-----------------------------Check Out Shopping Cart----------------------------------')
     sleep(2)
+    # click on headphones link on main page
     driver.find_element(By.ID, 'headphonesTxt').click()
     sleep(1)
     assert driver.current_url == locators.headphone_url
     sleep(1)
     product_name = driver.find_element(By.XPATH, './/a[@class="productName ng-binding"]').text
     sleep(1)
+    # click on product
     driver.find_element(By.XPATH, './/a[@class="productName ng-binding"]').click()
     sleep(1)
+    # add product to cart
     driver.find_element(By.XPATH, '//button[contains(.,"ADD TO CART")]').click()
     sleep(1)
+    # checkout button click
     driver.find_element(By.ID, 'checkOutPopUp').click()
     # fetching data values
     total_value = driver.find_element(By.XPATH, './/span[@class="roboto-medium totalValue ng-binding"]').text
@@ -354,12 +371,14 @@ def checkout_shopping_cart():
     # ---------------------Safe Pay Payment-----------------------------------------
 
     driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="save_safepay"]').click()
+    # Safepay details
     driver.find_element(By.XPATH, '//input[@name = "safepay_username"]').send_keys(locators.creditcard)
     driver.find_element(By.XPATH, '//input[@name = "safepay_password"]').send_keys(locators.cvv)
     sleep(1)
     driver.find_element(By.XPATH, '//button[@id = "pay_now_btn_SAFEPAY"]').click()
     sleep(3)
     assert driver.find_element(By.XPATH, './/span[@class="roboto-regular ng-scope"]').is_displayed()
+    # track order & tracking number
     track_num = driver.find_element(By.ID, 'trackingNumberLabel').text
     order_num = driver.find_element(By.ID, 'orderNumberLabel').text
 
@@ -375,6 +394,8 @@ def checkout_shopping_cart():
     # assert driver.find_element(By.XPATH,f'//div[contains(.,"{datetime.datetime.now().strftime
     # ("%d/%-m/%Y")}")]').is_displayed()
     assert driver.find_element(By.XPATH, f'//div[contains(.,"{total_value}")]').is_displayed()
+
+    # Check order in orders page
     driver.find_element(By.ID, 'hrefUserIcon').click()
     sleep(0.25)
     driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My orders")]').click()
@@ -389,16 +410,20 @@ def checkout_shopping_cart():
     print('')
     print(f'The order number is {order_num} & tracking number is {track_num}.')
     print('')
+
+    # Remove order
     driver.find_element(By.LINK_TEXT, 'REMOVE').click()
     sleep(1)
     driver.find_element(By.XPATH, '//button[contains(.,"YES")]').click()
     sleep(1)
     print(f'Order Cancel for {name}, PRODUCT : {product_name}. CUSTOMER CANCELLED THE ORDER!!!. ')
     assert driver.find_element(By.XPATH, '//div//label[contains(., " - No orders - ")]').is_displayed()
+    # Go to home page
     assert driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').is_enabled()
     driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').click()
     sleep(1)
     print('')
+
 
 def edit_user():
     print('--------------------------Edit User---------------------------------')
@@ -411,9 +436,9 @@ def edit_user():
     sleep(0.25)
     assert driver.find_element(By.XPATH, f'//div[contains(.,"{name}")]').is_displayed
     sleep(0.25)
-    driver.find_element(By.XPATH,'//h3/a[contains(.,"Edit")]').click()
+    driver.find_element(By.XPATH, '//h3/a[contains(.,"Edit")]').click()
     sleep(3)
-    #-------------------Change Deatils for Email & Password-------------
+    # -------------------Change Details for Email & Password-------------
     # driver.find_element(By.NAME,'emailAccountDetails').clear()
     # driver.find_element(By.NAME,'emailAccountDetails').send_keys('newuser@gmail.com')
     # driver.find_element(By.LINK_TEXT,'Change password').click()
@@ -423,16 +448,14 @@ def edit_user():
     # driver.find_element(By.NAME,'new_passwordAccountDetails').send_keys('Kk12345')
     # driver.find_element(By.NAME,'confirm_new_passwordAccountDetails').click()
     # driver.find_element(By.NAME,'confirm_new_passwordAccountDetails').send_keys('Kk12345')
-    #----------------------------------------------------------------------------------------
-    driver.find_element(By.NAME,'first_nameAccountDetails').click()
+    # ----------------------------------------------------------------------------------------
+    driver.find_element(By.NAME, 'first_nameAccountDetails').click()
     sleep(1)
     driver.find_element(By.NAME, 'first_nameAccountDetails').clear()
     sleep(1)
-    driver.find_element(By.NAME,'first_nameAccountDetails').send_keys('Anna')
+    driver.find_element(By.NAME, 'first_nameAccountDetails').send_keys('Anna')
     sleep(2)
-    new_name = driver.find_element(By.NAME,'first_nameAccountDetails').text
-    sleep(2)
-    driver.find_element(By.ID,'save_btnundefined').click()
+    driver.find_element(By.ID, 'save_btnundefined').click()
     sleep(2)
     assert driver.current_url == locators.my_account_url
     print('Edit Successful!!!.')
@@ -442,47 +465,53 @@ def edit_user():
 def delete_user():
     print('--------------------------Delete the User----------------------------')
     sleep(1)
+    # click user icon
     driver.find_element(By.ID, 'hrefUserIcon').click()
     sleep(1)
     driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My orders")]').click()
     sleep(1)
+    # check for orders
     assert driver.find_element(By.XPATH, '//div//label[contains(., " - No orders - ")]').is_displayed()
     assert driver.find_element(By.LINK_TEXT, 'CONTINUE SHOPPING').is_enabled()
     sleep(1)
     driver.find_element(By.ID, 'hrefUserIcon').click()
     sleep(1)
+    # Go to my account
     driver.find_element(By.XPATH, '//*[@id="loginMiniTitle"]/label[contains(.,"My account")]').click()
     new_name = driver.find_element(By.XPATH, '//div/label[@class="ng-binding"]').text
     sleep(0.25)
     assert driver.find_element(By.XPATH, f'//div[contains(.,"{new_name}")]').is_displayed()
     print(f'Name changed from {locators.first_name} {locators.last_name} to {new_name}.')
     sleep(0.25)
+    # Uncheck checkbox
     driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="category_laptops"]').click()
     sleep(1)
     driver.find_element(By.CSS_SELECTOR, 'input[type="checkbox"][name="category_mice"]').click()
     sleep(1)
     driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
     sleep(1)
-    driver.find_element(By.XPATH,'//button/div[contains(.,"Delete Account")]').click()
+    # Delete account
+    driver.find_element(By.XPATH, '//button/div[contains(.,"Delete Account")]').click()
     sleep(2)
-    driver.find_element(By.XPATH,'//div/div[contains(.,"yes")]').click()
+    driver.find_element(By.XPATH, '//div/div[contains(.,"yes")]').click()
     sleep(3)
     logger('Deleted')
+    # Confirm delete account
     driver.find_element(By.ID, 'hrefUserIcon').click()
     sleep(3)
-    driver.find_element(By.NAME,'username').click()
+    driver.find_element(By.NAME, 'username').click()
     sleep(0.25)
-    driver.find_element(By.NAME,'username').send_keys(locators.username)
+    driver.find_element(By.NAME, 'username').send_keys(locators.username)
     sleep(0.25)
-    driver.find_element(By.NAME,'password').click()
+    driver.find_element(By.NAME, 'password').click()
     sleep(0.25)
-    driver.find_element(By.NAME,'password').send_keys(locators.password)
+    driver.find_element(By.NAME, 'password').send_keys(locators.password)
     sleep(0.25)
-    driver.find_element(By.ID,'sign_in_btnundefined').click()
+    driver.find_element(By.ID, 'sign_in_btnundefined').click()
     sleep(0.25)
     assert driver.current_url == locators.web_url
     sleep(0.25)
-    assert driver.find_element(By.ID,'signInResultMessage').is_displayed()
+    assert driver.find_element(By.ID, 'signInResultMessage').is_displayed()
     sleep(1)
     driver.find_element(By.XPATH, '//div[@class = "closeBtn loginPopUpCloseBtn"]').click()
     print('User Deleted Successfully')
